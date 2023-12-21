@@ -1,9 +1,10 @@
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
+from pytube import YouTube
 import os
 import pickle
-from pytube import YouTube 
+import sys 
 import os 
 
 
@@ -12,9 +13,11 @@ def get_creds():
         with open('token.pickle', 'rb') as token:
             creds = pickle.load(token)
     else:
-        flow = InstalledAppFlow.from_client_secrets_file(
-            'client_secret.json', ['https://www.googleapis.com/auth/youtube.readonly'])
-        creds = flow.run_local_server(port=0)
+        flow = InstalledAppFlow.from_client_secrets_file('client_secret.json', ['https://www.googleapis.com/auth/youtube.readonly'])
+        try:
+            creds = flow.run_local_server(port=0)
+        except KeyboardInterrupt:
+            print('Oops! Keyboard Interrupted or Something Failed on authorization stage :( Try again later.')
 
         with open('token.pickle', 'wb') as token:
             pickle.dump(creds, token)
@@ -64,17 +67,19 @@ def download_video(video_url):
 if __name__ == "__main__":
     items_to_download = []
     print("Hey there!")
-    one_or_playlist = input("Хочешь возпользоваться возможностью скачивания из плейлиста? y/n ")
+    one_or_playlist = input("Хочешь воспользоваться возможностью скачивания из плейлиста? y/n ")
     if one_or_playlist == 'y':
         playlist_id = input("Введи id плейлиста: ")
         topkitems = input("Введи кол-во видео/аудио для скачивания: ")
         for item in get_playlist_info_by_id(playlist_id, topkitems):
             items_to_download.append(item)
-        print(items_to_download)
-    else:
+    elif one_or_playlist == 'v':
         id = input("Введи id видео/аудио: ")
         url = f'https://www.youtube.com/watch?v={id}'
         items_to_download.append(url)
+    else:
+        print("Упс! Кажется, вы ввели некорректные опции. Попробуйте снова.")
+        sys.exit()
     
     video_or_audio = input("Хочешь скачать материалы в формате mp4 (видео) или mp3 (аудио)? v/a ")
     if video_or_audio == 'v':
