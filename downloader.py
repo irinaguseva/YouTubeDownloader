@@ -73,7 +73,7 @@ if __name__ == "__main__":
         topkitems = input("Введи кол-во видео/аудио для скачивания: ")
         for item in get_playlist_info_by_id(playlist_id, topkitems):
             items_to_download.append(item)
-    elif one_or_playlist == 'v':
+    elif one_or_playlist == 'n':
         id = input("Введи id видео/аудио: ")
         url = f'https://www.youtube.com/watch?v={id}'
         items_to_download.append(url)
