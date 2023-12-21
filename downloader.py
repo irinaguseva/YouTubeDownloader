@@ -17,7 +17,7 @@ def get_creds():
         try:
             creds = flow.run_local_server(port=0)
         except KeyboardInterrupt:
-            print('Oops! Keyboard Interrupted or Something Failed on authorization stage :( Try again later.')
+            print('Упс! Keyboard Interrupted или что-то сломалось на этапе авторизации :( Попробуй снова позже.')
 
         with open('token.pickle', 'wb') as token:
             pickle.dump(creds, token)
